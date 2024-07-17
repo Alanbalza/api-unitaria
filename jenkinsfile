@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Clona tu repositorio desde el control de versiones
+                git 'https://tu-repositorio.git'
+            }
+        }
+        stage('Start Server') {
+            steps {
+                // Inicia el servidor en segundo plano
+                script {
+                    def server = startServer()
+                    env.SERVER_PID = server.pid
+                }
+            }
+        }
+        stage('Run Tests') {
+            steps {
+                // Ejecuta las pruebas
+                sh 'python test_api.py'
+            }
+        }
+        stage('Stop Server') {
+            steps {
+                // Detiene el servidor
+                sh 'kill $SERVER_PID'
+            }
+        }
+    }
+}
+
+def startServer() {
+    def proc = sh(script: 'python app.py & echo $!', returnStdout: true).trim()
+    return [pid: proc]
+}
