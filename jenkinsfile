@@ -5,7 +5,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Clona tu repositorio desde el control de versiones
-                git 'https://tu-repositorio.git'
+                git 'https://github.com/Alanbalza/api-unitaria.git'
             }
         }
         stage('Start Server') {
